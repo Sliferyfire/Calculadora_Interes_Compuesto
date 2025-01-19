@@ -1,0 +1,243 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{url}
+
+\title{Simulador de Inversiones con interés compuesto}
+\author{Aaron David Olguin Pichardo}
+\date{January 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Desarrollo paso a paso de las ecuaciones matemáticas de los distintos modelos}
+Durante la investigación, se analizaron distintos modelos matemáticos para representar el crecimiento del capital bajo el interés compuesto. A continuación, se describe el desarrollo de las ecuaciones fundamentales de estos modelos:
+
+\subsection{Modelo discreto}
+El interés compuesto discreto se basa en la fórmula:
+\begin{equation}
+M = P \left(1 + \frac{r}{n}\right)^{n \cdot t}
+\end{equation}
+donde:
+\begin{itemize}
+    \item $M$: Monto total acumulado al final del período.
+    \item $P$: Capital inicial invertido.
+    \item $r$: Tasa de interés nominal anual expresada como un decimal.
+    \item $n$: Número de períodos de capitalización por año.
+    \item $t$: Duración de la inversión en años.
+\end{itemize}
+
+El razonamiento detrás de esta fórmula proviene del hecho de que, al final de cada período de capitalización, los intereses generados se suman al capital, aumentando el monto para el siguiente cálculo. Esto genera un crecimiento exponencial conforme aumentan los períodos de capitalización.
+
+\subsection{Modelo continuo}
+Para el caso de capitalización continua, se utiliza la ecuación:
+\begin{equation}
+M = P \cdot e^{r \cdot t}
+\end{equation}
+En este modelo:
+\begin{itemize}
+    \item $e$: La base del logaritmo natural ($\approx 2.718$).
+\end{itemize}
+
+Este modelo surge al llevar $n$ al infinito en el modelo discreto, lo que significa que los intereses se calculan y suman continuamente. Matemáticamente, esta transición se justifica utilizando el límite:
+\begin{equation}
+\lim_{n \to \infty} \left(1 + \frac{r}{n}\right)^n = e^r
+\end{equation}
+
+Ambos modelos se utilizan dependiendo del escenario práctico o teórico que se desee analizar.
+
+La informacion colocada en esta seccion fue generada generada con la ayuda de una herramienta de inteligencia artificial, ChatGPT (OpenAI, 2025).
+
+\section{Comparación de los resultados numéricos obtenidos con los distintos modelos matemáticos}
+Para evaluar la aplicabilidad de los modelos investigados, se realizaron simulaciones numéricas con valores representativos. Esto permitió observar las diferencias entre los resultados del modelo discreto y el continuo. A continuación, se presenta un análisis con ejemplos:
+
+\subsection{Ejemplo 1}
+\begin{itemize}
+    \item \textbf{Capital inicial ($P$)}: \$1000
+    \item \textbf{Tasa de interés ($r$)}: 5\% anual ($0.05$).
+    \item \textbf{Duración ($t$)}: 10 años.
+    \item \textbf{Número de capitalizaciones ($n$)}: 4 (trimestral).
+\end{itemize}
+
+Resultados:
+\begin{itemize}
+    \item Modelo discreto: $M = 1647.01$
+    \item Modelo continuo: $M = 1648.72$
+    \item \textbf{Diferencia}: $1.71$
+\end{itemize}
+
+\subsection{Ejemplo 2}
+\begin{itemize}
+    \item \textbf{Capital inicial ($P$)}: \$2000
+    \item \textbf{Tasa de interés ($r$)}: 7\% anual ($0.07$).
+    \item \textbf{Duración ($t$)}: 20 años.
+    \item \textbf{Número de capitalizaciones ($n$)}: 12 (mensual).
+\end{itemize}
+
+Resultados:
+\begin{itemize}
+    \item Modelo discreto: $M = 8063.37$
+    \item Modelo continuo: $M = 8123.74$
+    \item \textbf{Diferencia}: $60.37$
+\end{itemize}
+
+\subsection{Observaciones}
+La diferencia entre los dos modelos es generalmente pequeña, pero se vuelve más notoria conforme aumentan la tasa de interés y el tiempo de inversión. Esto sugiere que, aunque el modelo continuo ofrece una representación teórica precisa, el modelo discreto es suficiente en la mayoría de los casos prácticos con capitalización periódica.
+
+\section{Obtención del modelo continuo a partir del modelo discreto}
+El modelo discreto está dado por:
+\begin{equation}
+M = P \left(1 + \frac{r}{n}\right)^{n \cdot t}
+\end{equation}
+A medida que $n$ tiende a infinito (capitalización continua), podemos utilizar la aproximación:
+\begin{equation}
+\left(1 + \frac{r}{n}\right)^n \to e^r
+\end{equation}
+Sustituyendo esto en la ecuación discreta, obtenemos:
+\begin{equation}
+M = P \cdot e^{r \cdot t}
+\end{equation}
+Así derivamos el modelo continuo.
+
+\section{Justificación de la elección del modelo matemático}
+El simulador implementa ambos modelos, discreto y continuo, para ofrecer flexibilidad y adaptarse a diversos escenarios financieros:
+\begin{itemize}
+    \item El modelo discreto es ideal para escenarios con capitalización periódica.
+    \item El modelo continuo es más adecuado para escenarios teóricos y donde se requiere precisión máxima.
+\end{itemize}
+La inclusión de ambos modelos permite comparar resultados y comprender mejor las diferencias entre estos enfoques.
+
+
+\section{Descripción de la lógica del software}
+
+\subsection{Estructura General del Código}
+El simulador se implementa como una aplicación de escritorio utilizando \textbf{PyQt6} para la interfaz gráfica y \textbf{pyqtgraph} para la representación de gráficas. El propósito del software es calcular y visualizar valores relacionados con inversiones en función del interés compuesto, mediante modelos matemáticos discretos y continuos.
+
+\subsection{Componentes Principales}
+
+\subsubsection{1. Clase \texttt{MainWindow}}
+La clase \texttt{MainWindow} define la ventana principal de la aplicación y sus funcionalidades:
+
+\begin{itemize}
+    \item \textbf{Título y Dimensiones}: La ventana se titula \texttt{"Calculadora de inversión con interés compuesto"}, con un tamaño predefinido de 800x600 píxeles.
+    \item \textbf{Diseño}: Utiliza un layout de tipo \texttt{QGridLayout} para organizar los elementos de la interfaz en una cuadrícula. Esta estructura y los widgets de la interfaz fueron generados con la ayuda de la documentación de la libreria PyQt (PyQt Tutorial).
+\end{itemize}
+
+\subsubsection{2. Widgets de Interfaz}
+La interfaz incluye:
+\begin{enumerate}
+    \item \textbf{Botones de Opciones}:
+    \begin{itemize}
+        \item \textbf{Calcular Monto Acumulado/Deseado}: Activa la funcionalidad para calcular el monto acumulado al final del periodo.
+        \item \textbf{Calcular Capital Inicial}: Activa la funcionalidad para calcular el capital inicial necesario para alcanzar un monto acumulado.
+    \end{itemize}
+
+    \item \textbf{Entradas de Usuario}:
+    \begin{itemize}
+        \item \textbf{Monto Deseado o Acumulado}: Campo de texto para el monto final deseado, habilitado solo si se selecciona la opción \texttt{Calcular Capital Inicial}.
+        \item \textbf{Capital Inicial}: Campo de texto para el capital de partida, habilitado solo si se selecciona la opción \texttt{Calcular Monto Acumulado}.
+        \item \textbf{Tasa de Interés}: Un \texttt{QDoubleSpinBox} para capturar la tasa de interés en formato decimal (por ejemplo, 0.05 para un 5\%).
+        \item \textbf{Capitalizaciones}: Un \texttt{QSpinBox} para capturar el número de capitalizaciones por año.
+        \item \textbf{Tiempo Total en Años}: Un \texttt{QSpinBox} para especificar el tiempo total en años.
+    \end{itemize}
+
+    \item \textbf{Botones de Acción}:
+    \begin{itemize}
+        \item \textbf{Calcular}: Realiza los cálculos y actualiza la gráfica.
+        \item \textbf{Limpiar}: Restaura los valores iniciales de los campos de entrada y borra la gráfica.
+    \end{itemize}
+
+    \item \textbf{Resultados}:
+    \begin{itemize}
+        \item Dos etiquetas (\texttt{QLabel}) para mostrar los resultados del cálculo, uno basado en el modelo discreto y otro en el modelo continuo.
+    \end{itemize}
+
+    \item \textbf{Gráfica}:
+    \begin{itemize}
+        \item Utiliza \texttt{pyqtgraph.PlotWidget} para visualizar la evolución del capital con respecto al tiempo. La grafica fue generada mediante la libreria PyQtGraph (Ogi Moore, 2024) utilizando la ayuda brindada por la documentacion de la misma (PyQtGraph Documentation).
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{3. Lógica del Cálculo}
+Los cálculos matemáticos se realizan dentro del método \texttt{calcular}, que adapta las ecuaciones según la opción seleccionada (monto acumulado o capital inicial).
+
+\paragraph{Modelo Discreto:}
+\begin{equation}
+M = P \left(1 + \frac{r}{n}\right)^{n \cdot t}
+\end{equation}
+\begin{itemize}
+    \item \(M\): Monto acumulado.
+    \item \(P\): Capital inicial.
+    \item \(r\): Tasa de interés.
+    \item \(n\): Número de capitalizaciones.
+    \item \(t\): Tiempo total en años.
+\end{itemize}
+
+\paragraph{Modelo Continuo:}
+\begin{equation}
+M = P \cdot e^{r \cdot t}
+\end{equation}
+Se utiliza la constante \(e\) de la librería \texttt{math} para calcular el exponente.
+
+\paragraph{Gráfica:}
+\begin{itemize}
+    \item Se generan dos líneas:
+        \begin{itemize}
+            \item Una línea conecta el origen con el punto final en el tiempo especificado.
+            \item Otra línea conecta el punto final con el eje horizontal.
+        \end{itemize}
+    \item El punto final está marcado con un círculo rojo para destacar el resultado.
+\end{itemize}
+
+\subsubsection{4. Limpieza y Reseteo}
+El método \texttt{resetearInputs} limpia los campos de entrada y borra la gráfica para permitir nuevos cálculos.
+
+\subsubsection{5. Entrada Principal}
+El programa se ejecuta desde la sección:
+\begin{verbatim}
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
+\end{verbatim}
+Esto inicializa la aplicación \texttt{PyQt6} y muestra la ventana principal.
+
+\subsection{Librerías Utilizadas}
+\begin{itemize}
+    \item \textbf{PyQt6}: Para crear la interfaz gráfica.
+    \item \textbf{pyqtgraph}: Para graficar la evolución del capital.
+    \item \textbf{math}: Para cálculos con exponenciales.
+    \item \textbf{numpy}: Para generar datos lineales en los ejes de la gráfica.
+\end{itemize}
+
+\subsection{Ejecución en Linux}
+El código está diseñado para ejecutarse en sistemas operativos basados en Linux. Antes de ejecutar, asegúrese de instalar las dependencias necesarias:
+\begin{verbatim}
+pip install PyQt6 pyqtgraph numpy
+\end{verbatim}
+Luego, puede ejecutarse con:
+\begin{verbatim}
+python nombre_del_archivo.py
+\end{verbatim}
+
+\section{Conclusón}
+Durante el desarrollo de este simulador, descubrí nuevas librerías para la realización de aplicaciones como esta. Antes, solo conocía librerías de Python como Tkinter para el diseño y creación de sencillas interfaces gráficas y Matplotlib para la generación de gráficas, pero las librerías PyQt resultaron ser una grata sorpresa por su facilidad de implementación y el estilo más moderno que manejan, tanto para el diseño y creación de la interfaz como para la creación de las gráficas.
+
+Por otro lado, descubrí un interesante uso de las derivadas en las aplicaciones financieras.
+
+Como punto final, quiero destacar la gran ventaja que representa el uso de herramientas modernas como la inteligencia artificial. Sin embargo, sinceramente creo que no hay mejor manera de hacer un proyecto como este que sumergirse en la documentación de las librerías, leerla, y posteriormente preguntar a ChatGPT cualquier cosa que no entiendas o no tengas del todo clara. Con total certeza, puedo decir que la documentación de todas las librerías contiene todo lo que necesitas saber sobre su uso y funcionamiento. No hay que abusar de las herramientas modernas si con ello se pone en riesgo tu propio aprendizaje. 
+
+\section{Referencias}
+\begin{itemize}
+    \item Python Tutorial. (2022, October 14). PyQT QGridLayout. Python Tutorial - Master Python Programming for Beginners From Scratch. 
+        \url{https://www.pythontutorial.net/pyqt/pyqt-qgridlayout/}
+    \item pyqtgraph/pyqtgraph: Fast data visualization and GUI tools for scientific / engineering applications. (n.d.). GitHub.                    
+        \url{https://github.com/pyqtgraph/pyqtgraph}
+    \item PyQtGraph — pyqtgraph 0.14.0dev0 documentation. (n.d.).                 \url{https://pyqtgraph.readthedocs.io/en/latest/}
+    \item OpenAI. (2025). ChatGPT (Enero 2025 version) [Herramienta de inteligencia artifi-cial]. Recuperado de 
+        \url{https://chat.openai.com/}
+        
+\end{itemize}
+
+\end{document}
