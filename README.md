@@ -52,10 +52,6 @@ python main.py
 
 La aplicación generará un gráfico que muestra la evolución del capital con respecto al tiempo.
 
-## Captura de pantalla
-
-![Ejemplo de la interfaz](./screenshot.png)
-
 ## Estructura del proyecto
 
 ```
@@ -66,7 +62,7 @@ La aplicación generará un gráfico que muestra la evolución del capital con r
 
 ## Autor
 
-- **[Tu Nombre]** - [tu_email@ejemplo.com]
+- **[Aaron David Olguin]** - [sliferyfire@gmail.com]
 
 ## Licencia
 
