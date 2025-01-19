@@ -34,7 +34,7 @@ Este proyecto es una calculadora de inversión que utiliza **interés compuesto*
 
 Ejecuta el archivo principal para iniciar la aplicación:
 ```bash
-python main.py
+python calculadoraIIC.py
 ```
 
 ### Instrucciones:
@@ -55,9 +55,10 @@ La aplicación generará un gráfico que muestra la evolución del capital con r
 ## Estructura del proyecto
 
 ```
-├── main.py           # Código principal del proyecto
-├── README.md         # Este archivo
-└── screenshot.png    # Captura de pantalla de la aplicación (agregar manualmente)
+├── calculadoraIIC.py           # Código principal del proyecto
+├── calculadoraIIC.tex          # Documentacion del proyecto
+└── README.md                   # Este archivo
+ 
 ```
 
 ## Autor
