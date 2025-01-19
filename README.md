@@ -64,10 +64,3 @@ La aplicación generará un gráfico que muestra la evolución del capital con r
 
 - **[Aaron David Olguin]** - [sliferyfire@gmail.com]
 
-## Licencia
-
-Este proyecto está licenciado bajo la [MIT License](./LICENSE).
-
-## Contribuciones
-
-¡Las contribuciones son bienvenidas! Por favor, abre un issue o envía un pull request.
