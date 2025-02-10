@@ -98,12 +98,14 @@ class MainWindow(QWidget):
         layout.addWidget(self.labelResultadoC, 8, 1, 1, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
         # Creacion del grafico
+        # Creación del gráfico
         self.plot_widget = pg.PlotWidget()
-        self.plot_widget.plot([0, 1, 2, 3, 4, 5], [0, 1, 4, 9, 16, 25], pen=pg.mkPen(color='b', width=2))
         self.plot_widget.setTitle("Capital con respecto al tiempo")
         self.plot_widget.setLabel("left", "Monto acumulado", color="white")
         self.plot_widget.setLabel("bottom", "Tiempo", color="white")
-        self.plot_widget.clear()
+        self.plot_widget.enableAutoRange(True, True)  # Ajustar automáticamente la escala
+
+        # Agregar el gráfico al layout
         layout.addWidget(self.plot_widget, 9, 0, 1, 2, alignment=Qt.AlignmentFlag.AlignCenter)
 
     # Funcion para deshabilitar el campo de Monto inicial
@@ -131,47 +133,59 @@ class MainWindow(QWidget):
             capitalizaciones = float(self.inputCapitalizaciones.value())
             tiempoAnios = float(self.inputTiempoTotal.value())
 
-            # Condicional if para decidir si calcular monto o no
             if self.calcularMonto:
                 capitalInicial = float(self.inputCapitalInicial.text())
-                # Calculo del monto deseado mediante modelo discreto (acumulación periódica)
+
+                # Modelo discreto
                 resultadoMonto = capitalInicial * ((1 + (tasaInteres / capitalizaciones)) ** (capitalizaciones * tiempoAnios))
                 montoRedondeado = round(resultadoMonto, 2)
                 self.labelResultado.setText(f"El monto acumulado/deseado es: (discreto) ${montoRedondeado}")
-                # Calculo del monto deseado mediante modelo continuo (capitalización constante)
-                resultadoMonto = capitalInicial * (math.e ** (tasaInteres * tiempoAnios))
-                montoRedondeado = round(resultadoMonto, 2)
-                self.labelResultadoC.setText(f"El monto acumulado/deseado es: (continuo) {montoRedondeado}")
-                # Modificacion de la grafica
+
+                # Modelo continuo
+                resultadoMontoC = capitalInicial * (math.e ** (tasaInteres * tiempoAnios))
+                montoRedondeadoC = round(resultadoMontoC, 2)
+                self.labelResultadoC.setText(f"El monto acumulado/deseado es: (continuo) ${montoRedondeadoC}")
+
+                # Generar datos para la gráfica (exponencial)
                 tiempos = np.linspace(0, tiempoAnios, 100)
-                montos = np.linspace(0, resultadoMonto, 100)
+                montos_discretos = capitalInicial * ((1 + (tasaInteres / capitalizaciones)) ** (capitalizaciones * tiempos))
+                montos_continuos = capitalInicial * (math.e ** (tasaInteres * tiempos))
+
+                # Limpiar y graficar
                 self.plot_widget.clear()
-                self.plot_widget.plot(tiempos, montos, pen=pg.mkPen(color='b', width=2))
-                self.plot_widget.plot([tiempoAnios], [resultadoMonto], pen=None, symbol='o', symbolBrush='r', symbolSize=10)
-                self.plot_widget.plot([tiempoAnios, tiempoAnios], [0, resultadoMonto], pen=pg.mkPen(color='r', width=1))
-                self.plot_widget.plot([0, tiempoAnios], [resultadoMonto, resultadoMonto], pen=pg.mkPen(color='r', width=1))
+                self.plot_widget.plot(tiempos, montos_discretos, pen=pg.mkPen(color='b', width=2), name="Discreto")
+                #self.plot_widget.plot(tiempos, montos_continuos, pen=pg.mkPen(color='g', width=2, style=pg.QtCore.Qt.PenStyle.DashLine), name="Continuo")
+                self.plot_widget.plot([tiempoAnios], [resultadoMonto], pen=None, symbol='o', symbolBrush='r',symbolSize=10)
+
+                self.plot_widget.enableAutoRange(True, True)
             else:
                 montoAcumulado = float(self.inputMontoDeseado.text())
-                #Calculo del capital inicial necesario mediante modelo discreto (acumulacion periodica)
+
+                # Modelo discreto
                 resultadoCapital = montoAcumulado / ((1 + (tasaInteres / capitalizaciones)) ** (capitalizaciones * tiempoAnios))
                 capitalRedondeado = round(resultadoCapital, 2)
-                self.labelResultado.setText(f"El capital inicial necesario es: (discreto) {capitalRedondeado}")
-                # Calculo del capital inicial necesario mediante modelo continuo (capitalización constante)
-                resultadoCapital = (montoAcumulado / (math.e ** (tasaInteres * tiempoAnios)))
-                capitalRedondeado = round(resultadoCapital, 2)
-                self.labelResultadoC.setText(f"El capital inicial necesario es: (continuo) ${capitalRedondeado}")
-                # Modificacion de la grafica
-                tiempos = np.linspace(0, tiempoAnios, 100)
-                montos = np.linspace(0, montoAcumulado, 100)
-                self.plot_widget.clear()
-                self.plot_widget.plot(tiempos, montos, pen=pg.mkPen(color='b', width=2))
-                self.plot_widget.plot([tiempoAnios], [montoAcumulado], pen=None, symbol='o', symbolBrush='r', symbolSize=10)
-                self.plot_widget.plot([tiempoAnios, tiempoAnios], [0, montoAcumulado], pen=pg.mkPen(color='r', width=1))
-                self.plot_widget.plot([0, tiempoAnios], [montoAcumulado, montoAcumulado],pen=pg.mkPen(color='r', width=1))
+                self.labelResultado.setText(f"El capital inicial necesario es: (discreto) ${capitalRedondeado}")
 
+                # Modelo continuo
+                resultadoCapitalC = montoAcumulado / (math.e ** (tasaInteres * tiempoAnios))
+                capitalRedondeadoC = round(resultadoCapitalC, 2)
+                self.labelResultadoC.setText(f"El capital inicial necesario es: (continuo) ${capitalRedondeadoC}")
+
+                # Generar datos para la gráfica
+                tiempos = np.linspace(0, tiempoAnios, 100)
+                montos_discretos = resultadoCapital * ((1 + (tasaInteres / capitalizaciones)) ** (capitalizaciones * tiempos))
+                montos_continuos = resultadoCapital * (math.e ** (tasaInteres * tiempos))
+
+                # Limpiar y graficar
+                self.plot_widget.clear()
+                self.plot_widget.plot(tiempos, montos_discretos, pen=pg.mkPen(color='b', width=2), name="Discreto")
+                #self.plot_widget.plot(tiempos, montos_continuos, pen=pg.mkPen(color='g', width=2, style=pg.QtCore.Qt.PenStyle.DashLine), name="Continuo")
+                self.plot_widget.plot([tiempoAnios], [montoAcumulado], pen=None, symbol='o', symbolBrush='r', symbolSize=10)
+
+                self.plot_widget.enableAutoRange(True, True)
         except Exception as error:
             self.labelResultado.setText("Error al calcular")
-            self.labelResultadoC.setText("Error al clcular")
+            self.labelResultadoC.setText("Error al calcular")
             print(error)
 
     def resetearInputs(self):
