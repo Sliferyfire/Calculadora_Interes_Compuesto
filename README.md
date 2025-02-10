@@ -21,8 +21,8 @@ Este proyecto es una calculadora de inversión que utiliza **interés compuesto*
 
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/tu_usuario/tu_repositorio.git
-   cd tu_repositorio
+   git clone https://github.com/Sliferyfire/Calculadora_Interes_Compuesto.git
+   cd Calculadora_Interes_Compuesto
    ```
 
 2. Instala las dependencias:
